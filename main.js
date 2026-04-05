@@ -12,9 +12,7 @@ const { data, execute } = require("./commands/utility/role");
 
 //initializes discord client
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-client.once(Events.ClientReady, (readyClient) => {
-  console.log(`Ready! Logged in as ${readyClient.user.tag}`);
-});
+
 client.login(token);
 
 client.commands = new Collection();
@@ -46,33 +44,19 @@ for (const folder of commandFolder) {
   }
 }
 
-client.on(Events.InteractionCreate, async (interaction) => {
-  console.log(interaction.commandName + "was just interacted");
-  if (!interaction.isChatInputCommand()) {
-    return;
+const eventPath = path.join(__dirname, "events");
+const eventFiles = fs
+  .readdirSync(eventPath)
+  .filter((file) => file.endsWith(".js"));
+for (file of eventFiles) {
+  const filePath = path.join(eventPath, file);
+  const event = require(filePath);
+
+  //runs once if event.once is true
+  if (event.once) {
+    client.once(event.name, (...args) => event.execute(...args));
   } else {
-    console.log(interaction);
-    //retrieves command associated w command name from commands collection
-    const command = interaction.client.commands.get(interaction.commandName);
-    if (!command) {
-      console.log(`${interaction.commandName} was NOT FOUND!!!`);
-      return;
-    }
-
-    try {
-      await command.execute(interaction);
-    } catch (error) {
-      console.log(`error executing command: ${error}`);
-
-      //if bot has already showed some sort of response
-      if (interaction.replied || interaction.deferred) {
-        //sends follow up message
-        await interaction.followUp({ content: "uh oh! we ran into an error" });
-      } else {
-        await interaction.reply({
-          content: "uh oh beep boop error detected!",
-        });
-      }
-    }
+    //else runs on event trigger
+    client.on(event.name, (...args) => event.execute(...args));
   }
-});
+}
