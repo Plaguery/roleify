@@ -1,5 +1,8 @@
+const path = require("node:path");
 const { SlashCommandBuilder } = require("discord.js");
-const { clientId, guildId, token, blKey } = require("./config.json");
+const { clientId, guildId, token, blKey } = require(
+  path.join(__dirname, "../../config.json"),
+);
 
 module.exports = {
   data: new SlashCommandBuilder().setName("role").setDescription("roles"),

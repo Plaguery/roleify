@@ -8,6 +8,7 @@ const {
   MessageFlags,
 } = require("discord.js");
 const { token } = require("./config.json");
+const { data, execute } = require("./commands/utility/role");
 
 //initializes discord client
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
