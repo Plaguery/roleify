@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require("discord.js");
+const { clientId, guildId, token, blKey } = require("./config.json");
 
 module.exports = {
   data: new SlashCommandBuilder().setName("role").setDescription("roles"),
