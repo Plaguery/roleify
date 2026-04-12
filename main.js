@@ -11,8 +11,9 @@ const { token } = require("./config.json");
 const { data, execute } = require("./commands/utility/role");
 
 //initializes discord client
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-
+const client = new Client({
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
+});
 client.login(token);
 
 client.commands = new Collection();

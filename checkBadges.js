@@ -1,5 +1,10 @@
 const { clientId, guildId, token, blKey } = require("./config.json");
 
+module.exports = {
+  fetchId,
+  ownsItem,
+  checkUser,
+};
 //grabs roblox id from discord id using bloxlink
 async function fetchId(id) {
   try {
@@ -56,4 +61,4 @@ async function checkUser(id, itemId, itemType = 2) {
 }
 
 //checkUser("694605691716894820", "1078926980379768");
-//ownsItem("29694111114867", "1078926980379768");
+//ownsItem("296944867", "1078926980379768");
