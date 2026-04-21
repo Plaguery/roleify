@@ -24,7 +24,7 @@ module.exports = {
         if (interaction.replied || interaction.deferred) {
           //sends follow up message
           await interaction.followUp({
-            content: "uh oh! we ran into an error",
+            content: "uh oh! we ran into an error" + error,
           });
         } else {
           await interaction.reply({

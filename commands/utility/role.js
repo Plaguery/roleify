@@ -21,20 +21,39 @@ module.exports = {
         .setName("badgeid")
         .setDescription("ID of badge to check for")
         .setRequired(true),
+    )
+    .addStringOption((apiKey) =>
+      apiKey
+        .setName("apikey")
+        .setDescription(
+          "Bloxlink API Key. Required if command is not run in the JEGG server",
+        )
+        .setRequired(false),
     ),
+
   async execute(interaction) {
     await interaction.reply(`Checking badges, please wait.`);
+    //main important variables...
     const guild = interaction.guild;
-    const uid = interaction.user.id;
-    await interaction.followUp(
-      await checkUser(uid, interaction.options.getString("badgeid")),
-    );
-    //await interaction.followUp(interaction.options);
+    const role = interaction.options.getRole("role");
+    const badge = interaction.options.getString("badgeid");
 
-    //const memberList = await guild.members.fetch();
+    //  await interaction.followUp("role" + role);
 
-    // memberList.forEach((element) => {
-    //   console.log(element.user + " is " + element.displayName);
-    // });
+    //    const uid = interaction.user.id; //user who triggered interaction
+    //    await interaction.followUp("hasBadge = " + (await checkUser(uid, badge)));
+
+    const memberList = await guild.members.fetch();
+
+    memberList.forEach(async (member) => {
+      if (await checkUser(member.id, badge)) {
+        console.log(member.user + "/" + member.displayName + "has the badge!");
+        member.roles.add(role);
+      } else {
+        console.log(
+          member.user + "/" + member.displayName + "does NOT have the badge",
+        );
+      }
+    });
   },
 };
