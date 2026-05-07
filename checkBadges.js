@@ -5,6 +5,7 @@ module.exports = {
   ownsItem,
   checkUser,
 };
+
 //grabs roblox id from discord id using bloxlink
 async function fetchId(id) {
   try {
@@ -56,7 +57,7 @@ async function ownsItem(uid, itemId, itemType = 2) {
 async function checkUser(id, itemId, itemType = 2) {
   const bloxId = await fetchId(id);
   const isOwned = await ownsItem(bloxId, itemId, itemType);
-  console.log(isOwned);
+
   return isOwned;
 }
 

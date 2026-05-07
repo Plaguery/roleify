@@ -7,7 +7,7 @@ module.exports = {
     if (!interaction.isChatInputCommand()) {
       return;
     } else {
-      console.log(interaction);
+      //console.log(interaction);
       //retrieves command associated w command name from commands collection
       const command = interaction.client.commands.get(interaction.commandName);
       if (!command) {

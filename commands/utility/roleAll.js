@@ -1,5 +1,5 @@
 const path = require("node:path");
-const { SlashCommandBuilder, PermissionsBitField } = require("discord.js");
+const { SlashCommandBuilder } = require("discord.js");
 const { clientId, guildId, token, blKey } = require(
   path.join(__dirname, "../../config.json"),
 );
@@ -8,11 +8,8 @@ const { ownsItem, checkUser } = require("../../checkBadges.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("role")
-    .setDescription("Applies role to user if they own specified badge")
-    .addUserOption((user) =>
-      user.setName("user").setDescription("User to check").setRequired(true),
-    )
+    .setName("roleall")
+    .setDescription("Applies role to users if they own specified badge")
     .addRoleOption((role) =>
       role
         .setName("role")
@@ -36,35 +33,27 @@ module.exports = {
 
   async execute(interaction) {
     await interaction.reply(`Checking badges, please wait.`);
-
     //main important variables...
     const guild = interaction.guild;
     const role = interaction.options.getRole("role");
     const badge = interaction.options.getString("badgeid");
-    const user = interaction.options.getUser("user");
-    const member = await guild.members.fetch(user.id);
-    const invoker = await guild.members.fetch(interaction.user.id);
-    const manageRoles = invoker.permissions.has(
-      PermissionsBitField.Flags.ManageRoles,
-    );
-
-    if (!manageRoles) {
-      await interaction.followUp("Missing required manage-role permissions.");
-      return;
-    }
 
     //  await interaction.followUp("role" + role);
 
     //    const uid = interaction.user.id; //user who triggered interaction
     //    await interaction.followUp("hasBadge = " + (await checkUser(uid, badge)));
 
-    if (await checkUser(member.id, badge)) {
-      console.log(member.user + "/" + member.displayName + " has the badge!");
-      await member.roles.add(role);
-    } else {
-      console.log(
-        member.user + "/" + member.displayName + " does NOT have the badge",
-      );
-    }
+    const memberList = await guild.members.fetch();
+
+    memberList.forEach(async (member) => {
+      if (await checkUser(member.id, badge)) {
+        console.log(member.user + "/" + member.displayName + "has the badge!");
+        member.roles.add(role);
+      } else {
+        console.log(
+          member.user + "/" + member.displayName + "does NOT have the badge",
+        );
+      }
+    });
   },
 };
