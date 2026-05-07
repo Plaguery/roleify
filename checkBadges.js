@@ -17,13 +17,18 @@ async function fetchId(id) {
     );
     const data = await response.json();
     if (!response.ok) {
-      throw new Error(`bloxlink error: ${response.status} // ${data.error}`);
+      if (response.status == 429) {
+        throw new Error(`Error: Bloxlink rate limit`);
+      } else {
+        throw new Error(`Bloxlink Error: ${response.status} // ${data.error}`);
+      }
     }
 
     const bloxId = data.robloxID;
     return bloxId;
   } catch (error) {
     console.log(error);
+    throw error;
   }
 }
 
@@ -46,19 +51,23 @@ async function ownsItem(uid, itemId, itemType = 2) {
       );
     }
 
-    // console.log(isOwned);
     return isOwned;
   } catch (error) {
     console.log(error);
+    throw error;
   }
 }
 
 //check from discord id & itemId
 async function checkUser(id, itemId, itemType = 2) {
-  const bloxId = await fetchId(id);
-  const isOwned = await ownsItem(bloxId, itemId, itemType);
-
-  return isOwned;
+  try {
+    const bloxId = await fetchId(id);
+    const isOwned = await ownsItem(bloxId, itemId, itemType);
+    return isOwned;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 }
 
 //checkUser("694605691716894820", "1078926980379768");

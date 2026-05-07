@@ -1,5 +1,5 @@
 const path = require("node:path");
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, PermissionsBitField } = require("discord.js");
 const { clientId, guildId, token, blKey } = require(
   path.join(__dirname, "../../config.json"),
 );
@@ -38,22 +38,30 @@ module.exports = {
     const role = interaction.options.getRole("role");
     const badge = interaction.options.getString("badgeid");
 
-    //  await interaction.followUp("role" + role);
+    //checks for perms
+    const invoker = await guild.members.fetch(interaction.user.id);
+    const manageRoles = invoker.permissions.has(
+      PermissionsBitField.Flags.ManageRoles,
+    );
 
-    //    const uid = interaction.user.id; //user who triggered interaction
-    //    await interaction.followUp("hasBadge = " + (await checkUser(uid, badge)));
+    if (!manageRoles) {
+      await interaction.followUp("Missing required manage-role permissions.");
+      return;
+    }
 
     const memberList = await guild.members.fetch();
 
-    memberList.forEach(async (member) => {
-      if (await checkUser(member.id, badge)) {
-        console.log(member.user + "/" + member.displayName + "has the badge!");
-        member.roles.add(role);
-      } else {
-        console.log(
-          member.user + "/" + member.displayName + "does NOT have the badge",
-        );
+    for (const member of memberList.values()) {
+      try {
+        if (await checkUser(member.id, badge)) {
+          console.log(member.user.tag + " has the badge!");
+          await member.roles.add(role);
+        } else {
+          console.log(member.user.tag + " does NOT have the badge");
+        }
+      } catch (error) {
+        console.log(`Skipping ${member.user.tag}: ${error.message || error}`);
       }
-    });
+    }
   },
 };

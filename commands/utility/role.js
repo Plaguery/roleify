@@ -53,17 +53,15 @@ module.exports = {
       return;
     }
 
-    //  await interaction.followUp("role" + role);
-
-    //    const uid = interaction.user.id; //user who triggered interaction
-    //    await interaction.followUp("hasBadge = " + (await checkUser(uid, badge)));
-
+    //checks for badge
     if (await checkUser(member.id, badge)) {
-      console.log(member.user + "/" + member.displayName + " has the badge!");
+      await interaction.followUp(
+        member + "/" + member.displayName + " has the badge!",
+      );
       await member.roles.add(role);
     } else {
-      console.log(
-        member.user + "/" + member.displayName + " does NOT have the badge",
+      await interaction.followUp(
+        member + "/" + member.displayName + " does NOT have the badge",
       );
     }
   },
