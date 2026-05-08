@@ -27,7 +27,6 @@ async function fetchId(id) {
     const bloxId = data.robloxID;
     return bloxId;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 }
@@ -53,7 +52,6 @@ async function ownsItem(uid, itemId, itemType = 2) {
 
     return isOwned;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 }
@@ -65,7 +63,6 @@ async function checkUser(id, itemId, itemType = 2) {
     const isOwned = await ownsItem(bloxId, itemId, itemType);
     return isOwned;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 }

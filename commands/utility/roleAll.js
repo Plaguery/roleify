@@ -63,5 +63,7 @@ module.exports = {
         console.log(`Skipping ${member.user.tag}: ${error.message || error}`);
       }
     }
+
+    await interaction.followUp("Completed role checking");
   },
 };
