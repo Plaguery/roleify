@@ -1,4 +1,4 @@
-const { clientId, guildId, token, blKey } = require("./config.json");
+const { clientId, token, blKey } = require("./config.json");
 
 module.exports = {
   fetchId,
@@ -7,12 +7,12 @@ module.exports = {
 };
 
 //grabs roblox id from discord id using bloxlink
-async function fetchId(id) {
+async function fetchId(id, key, guildid) {
   try {
     const response = await fetch(
-      `https://api.blox.link/v4/public/guilds/${guildId}/discord-to-roblox/${id}`,
+      `https://api.blox.link/v4/public/guilds/${guildid}/discord-to-roblox/${id}`,
       {
-        headers: { Authorization: blKey },
+        headers: { Authorization: key },
       },
     );
     const data = await response.json();
@@ -45,9 +45,13 @@ async function ownsItem(uid, itemId, itemType = 2) {
     const isOwned = await response.json();
 
     if (!response.ok) {
-      throw new Error(
-        `roblox error: ${response.status} // ${isOwned.errors[0].message}`,
-      );
+      if (response.status == 429) {
+        throw new Error(`Roblox error: Rate limited`);
+      } else {
+        throw new Error(
+          `Roblox error: ${response.status} // ${isOwned.errors[0].message}`,
+        );
+      }
     }
 
     return isOwned;
@@ -57,15 +61,15 @@ async function ownsItem(uid, itemId, itemType = 2) {
 }
 
 //check from discord id & itemId
-async function checkUser(id, itemId, itemType = 2) {
+async function checkUser(id, itemId, guildid, key, itemType = 2) {
+  if (key == null) {
+    key = blKey;
+  }
   try {
-    const bloxId = await fetchId(id);
+    const bloxId = await fetchId(id, key, guildid);
     const isOwned = await ownsItem(bloxId, itemId, itemType);
     return isOwned;
   } catch (error) {
     throw error;
   }
 }
-
-//checkUser("694605691716894820", "1078926980379768");
-//ownsItem("296944867", "1078926980379768");
