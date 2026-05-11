@@ -20,15 +20,23 @@ module.exports = {
       } catch (error) {
         console.log(`error executing command: ${error}`);
 
-        //if bot has already showed some sort of response
+        //if bot has already showed some sort of response, sends follow up
         if (interaction.replied || interaction.deferred) {
-          //sends follow up message
-          await interaction.followUp({
-            content: "uh oh! we ran into an error" + error,
-          });
+          if (error.code == 50013) {
+            await interaction.followUp({
+              content:
+                "Permission error: Ensure Roleify role is above roles you wish to assign ",
+            });
+          } else {
+            await interaction.followUp({
+              content: "Error: " + error,
+            });
+          }
+
+          //sends intitial reply
         } else {
           await interaction.reply({
-            content: "uh oh beep boop error detected!",
+            content: "Error: " + error,
           });
         }
       }
