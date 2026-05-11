@@ -1,6 +1,6 @@
 const path = require("node:path");
 const { SlashCommandBuilder, PermissionsBitField } = require("discord.js");
-const { clientId, guildId, token, blKey } = require(
+const { clientId, token, blKey } = require(
   path.join(__dirname, "../../config.json"),
 );
 
@@ -34,9 +34,12 @@ module.exports = {
   async execute(interaction) {
     await interaction.reply(`Checking badges, please wait.`);
     //main important variables...
+
     const guild = interaction.guild;
+    const guildid = interaction.guild_id;
     const role = interaction.options.getRole("role");
     const badge = interaction.options.getString("badgeid");
+    const key = interaction.options.getString("apikey");
 
     //checks for perms
     const invoker = await guild.members.fetch(interaction.user.id);
@@ -53,14 +56,20 @@ module.exports = {
 
     for (const member of memberList.values()) {
       try {
-        if (await checkUser(member.id, badge)) {
-          console.log(member.user.tag + " has the badge!");
+        //skips if bot
+        if (member.user.bot) {
+          continue;
+        }
+        if (await checkUser(member.id, badge, guildid, key)) {
+          console.debug(member.user.tag + " has the badge!");
           await member.roles.add(role);
         } else {
-          console.log(member.user.tag + " does NOT have the badge");
+          console.log(member.user.tag + " does NOT have the badge!");
         }
       } catch (error) {
-        console.log(`Skipping ${member.user.tag}: ${error.message || error}`);
+        await interaction.followUp(
+          `Skipping ${member.user.tag}: ${error.message || error}`,
+        );
       }
     }
 

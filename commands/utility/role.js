@@ -39,8 +39,11 @@ module.exports = {
 
     //main important variables...
     const guild = interaction.guild;
+    const guildid = interaction.guildId;
+
     const role = interaction.options.getRole("role");
     const badge = interaction.options.getString("badgeid");
+    const key = interaction.options.getString("apikey");
     const user = interaction.options.getUser("user");
     const member = await guild.members.fetch(user.id);
     const invoker = await guild.members.fetch(interaction.user.id);
@@ -54,15 +57,11 @@ module.exports = {
     }
 
     //checks for badge
-    if (await checkUser(member.id, badge)) {
-      await interaction.followUp(
-        member + "/" + member.displayName + " has the badge!",
-      );
+    if (await checkUser(member.id, badge, guildid, key)) {
+      await interaction.followUp(member.user.tag + " has the badge!");
       await member.roles.add(role);
     } else {
-      await interaction.followUp(
-        member + "/" + member.displayName + " does NOT have the badge",
-      );
+      await interaction.followUp(member.user.tag + " does NOT have the badge");
     }
   },
 };
