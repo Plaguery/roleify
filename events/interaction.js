@@ -27,16 +27,17 @@ module.exports = {
               content:
                 "Permission error: Ensure Roleify role is above roles you wish to assign ",
             });
+            return;
           } else {
             await interaction.followUp({
-              content: "Error: " + error,
+              content: error,
             });
           }
 
           //sends intitial reply
         } else {
           await interaction.reply({
-            content: "Error: " + error,
+            content: error,
           });
         }
       }
