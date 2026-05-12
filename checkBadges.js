@@ -1,9 +1,16 @@
 const { clientId, token, blKey } = require("./config.json");
+const typeWord = {
+  0: "asset",
+  1: "gamepass",
+  2: "badge",
+  3: "bundle",
+};
 
 module.exports = {
   fetchId,
   ownsItem,
   checkUser,
+  typeWord,
 };
 
 //grabs roblox id from discord id using bloxlink
@@ -21,13 +28,13 @@ async function fetchId(id, key, guildid) {
     if (!response.ok) {
       var err;
       if (response.status == 429) {
-        err = new Error(`Error: Bloxlink rate limit`);
+        err = new Error(`⚠ Bloxlink rate limit`);
       } else if (response.status == 404) {
-        err = new Error(`Error: Bloxlink can't find the specified user.`);
+        err = new Error(`⚠ Bloxlink can't find the specified user.`);
       } else if (response.status == 401) {
-        err = new Error(`Error: Must provide correct Bloxlink API key`);
+        err = new Error(`⚠ Must provide correct Bloxlink API key`);
       } else {
-        err = new Error(`Bloxlink Error: ${response.status} // ${data.error}`);
+        err = new Error(`⚠ Bloxlink ${response.status} // ${data.error}`);
       }
       err.status = response.status;
       throw err;
@@ -55,10 +62,10 @@ async function ownsItem(uid, itemId, itemType = 2) {
 
     if (!response.ok) {
       if (response.status == 429) {
-        throw new Error(`Roblox error: Rate limited`);
+        throw new Error(`⚠ Roblox rate limit`);
       } else {
         throw new Error(
-          `Roblox error: ${response.status} // ${isOwned.errors[0].message}`,
+          `⚠ Roblox ${response.status} // ${isOwned.errors[0].message}`,
         );
       }
     }

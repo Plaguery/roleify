@@ -10,7 +10,7 @@ const { clientId, token, blKey } = require(
   path.join(__dirname, "../../config.json"),
 );
 
-const { ownsItem, checkUser } = require("../../checkBadges.js");
+const { ownsItem, checkUser, typeWord } = require("../../checkBadges.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -35,6 +35,18 @@ module.exports = {
           "Bloxlink API Key. Required if command is not run in the JEGG server",
         )
         .setRequired(false),
+    )
+    .addStringOption((type) =>
+      type
+        .setName("checktype")
+        .setDescription("Type of item to check for. Defaults to badge.")
+        .setRequired(false)
+        .addChoices(
+          { name: "Asset", value: "0" },
+          { name: "Gamepass", value: "1" },
+          { name: "Badge", value: "2" },
+          { name: "Bundle", value: "3" },
+        ),
     ),
 
   async execute(interaction) {
@@ -44,7 +56,6 @@ module.exports = {
         flags: MessageFlags.Ephemeral,
         withResponse: true,
       });
-      //  var msg = await interaction.fetchReply();
 
       //main important variables...
 
@@ -54,6 +65,9 @@ module.exports = {
       const badge = interaction.options.getString("badgeid");
       const key = interaction.options.getString("apikey");
 
+      var checktype = interaction.options.getString("checktype");
+      checktype = !checktype ? 2 : checktype;
+
       //checks for perms
       const invoker = await guild.members.fetch(interaction.user.id);
       const manageRoles = invoker.permissions.has(
@@ -62,9 +76,10 @@ module.exports = {
 
       var msgContent = "";
 
+      //checks perms
       if (!manageRoles) {
         await interaction.editReply(
-          "Missing required manage-role permissions.",
+          "⚠ Missing required manage-role permissions.",
         );
         return;
       }
@@ -78,47 +93,41 @@ module.exports = {
           if (member.user.bot) {
             continue;
           }
-          if (await checkUser(member.id, badge, guildid, key)) {
-            addText = member.user.tag + " has the badge!";
-            //console.debug(member.user.tag + " has the badge!");
+          if (await checkUser(member.id, badge, guildid, key, checktype)) {
+            addText = `${member.user.tag} has the ${typeWord[checktype]}! ✓`;
+
             await member.roles.add(role);
           } else {
-            // console.log(member.user.tag + " does NOT have the badge!");
-            addText = member.user.tag + " does NOT have the badge!";
+            addText = `${member.user.tag} does NOT have the ${typeWord[checktype]}. ✗`;
           }
         } catch (error) {
           //error checking
           if (error?.status == 401) {
             await interaction.editReply(
-              `Error: Must provide correct Bloxlink API key`,
+              `⚠ Must provide correct Bloxlink API key`,
             );
             return;
           } else if (error?.status == 400) {
-            await interaction.editReply(`Error: Invalid Bloxlink API key`);
+            await interaction.editReply(`⚠ Invalid Bloxlink API key`);
             return;
           }
           addText = `Skipping ${member.user.tag}: ${error.message || error}`;
-          /*    await interaction.editReply(
-            `Skipping ${member.user.tag}: ${error.message || error}`,
-          ); */
         }
         msgContent += addText + "\n";
-
-        // console.log("break", msgContent);
-        //  msg = await interaction.editReply(msgContent);
-        //  console.log(msg.content);
       }
+
+      //creates txt file to summarize results
       const attachment = new AttachmentBuilder(
         Buffer.from(msgContent, "utf-8"),
         { name: "result.txt" },
       );
 
       await interaction.followUp({
-        content: "Completed role checking",
+        content: "Completed role checking.",
         files: [attachment],
       });
     } catch (error) {
-      await interaction.followUp({ content: error.message });
+      await interaction.editReply({ content: error.message });
     }
   },
 };
