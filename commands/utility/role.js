@@ -8,7 +8,7 @@ const { clientId, guildId, token, blKey } = require(
   path.join(__dirname, "../../config.json"),
 );
 
-const { ownsItem, checkUser } = require("../../checkBadges.js");
+const { ownsItem, checkUser, typeWord } = require("../../checkBadges.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -36,12 +36,23 @@ module.exports = {
           "Bloxlink API Key. Required if command is not run in the JEGG server",
         )
         .setRequired(false),
+    )
+    .addStringOption((type) =>
+      type
+        .setName("checktype")
+        .setDescription("Type of item to check for. Defaults to badge.")
+        .setRequired(false)
+        .addChoices(
+          { name: "Asset", value: "0" },
+          { name: "Gamepass", value: "1" },
+          { name: "Badge", value: "2" },
+          { name: "Bundle", value: "3" },
+        ),
     ),
-
   async execute(interaction) {
     try {
       //init response
-      const msg = await interaction.reply({
+      await interaction.reply({
         content: `Checking badges, please wait.`,
         flags: MessageFlags.Ephemeral,
         withResponse: true,
@@ -55,6 +66,9 @@ module.exports = {
       const badge = interaction.options.getString("badgeid");
       const key = interaction.options.getString("apikey");
       const user = interaction.options.getUser("user");
+      var checktype = interaction.options.getString("checktype");
+      checktype = !checktype ? 2 : checktype;
+
       const member = await guild.members.fetch(user.id);
       const invoker = await guild.members.fetch(interaction.user.id);
       const manageRoles = invoker.permissions.has(
@@ -64,24 +78,24 @@ module.exports = {
       //checks for perms
       if (!manageRoles) {
         await interaction.editReply(
-          "Missing required manage-role permissions.",
+          "⚠ Missing required manage-role permissions.",
         );
         return;
       }
 
       //checks for badge
-      if (await checkUser(member.id, badge, guildid, key)) {
+      if (await checkUser(member.id, badge, guildid, key, checktype)) {
         await interaction.editReply(
-          member.user.tag + " has the badge! Adding role.",
+          `${member.user.tag} has the ${typeWord[checktype]}! ✓`,
         );
         await member.roles.add(role);
       } else {
         await interaction.editReply(
-          member.user.tag + " does NOT have the badge. No role added.",
+          `${member.user.tag} does NOT have the ${typeWord[checktype]}. ✗`,
         );
       }
     } catch (error) {
-      await interaction.editReply(`${error.message || error}`);
+      await interaction.editReply(`${error.message}`);
     }
   },
 };

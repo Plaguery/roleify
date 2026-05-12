@@ -3,11 +3,9 @@ const { Events } = require("discord.js");
 module.exports = {
   name: Events.InteractionCreate,
   async execute(interaction) {
-    // console.log(interaction.commandName + "was just interacted");
     if (!interaction.isChatInputCommand()) {
       return;
     } else {
-      //console.log(interaction);
       //retrieves command associated w command name from commands collection
       const command = interaction.client.commands.get(interaction.commandName);
       if (!command) {
@@ -25,7 +23,7 @@ module.exports = {
           if (error.code == 50013) {
             await interaction.followUp({
               content:
-                "Permission error: Ensure Roleify role is above roles you wish to assign ",
+                "⚠ Ensure Roleify role is above roles you wish to assign ",
             });
             return;
           } else {
