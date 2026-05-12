@@ -63,6 +63,8 @@ async function ownsItem(uid, itemId, itemType = 2) {
     if (!response.ok) {
       if (response.status == 429) {
         throw new Error(`⚠ Roblox rate limit`);
+      } else if (response.status == 403) {
+        throw new Error(`⚠ User has their Roblox inventory privated`);
       } else {
         throw new Error(
           `⚠ Roblox ${response.status} // ${isOwned.errors[0].message}`,

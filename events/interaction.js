@@ -1,4 +1,4 @@
-const { Events } = require("discord.js");
+const { Events, MessageFlags } = require("discord.js");
 
 module.exports = {
   name: Events.InteractionCreate,
@@ -16,8 +16,6 @@ module.exports = {
       try {
         await command.execute(interaction);
       } catch (error) {
-        console.log(`error executing command: ${error}`);
-
         //if bot has already showed some sort of response, sends follow up
         if (interaction.replied || interaction.deferred) {
           if (error.code == 50013) {
