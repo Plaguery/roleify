@@ -1,5 +1,9 @@
 const path = require("node:path");
-const { SlashCommandBuilder, PermissionsBitField } = require("discord.js");
+const {
+  SlashCommandBuilder,
+  PermissionsBitField,
+  MessageFlags,
+} = require("discord.js");
 const { clientId, guildId, token, blKey } = require(
   path.join(__dirname, "../../config.json"),
 );
@@ -35,33 +39,49 @@ module.exports = {
     ),
 
   async execute(interaction) {
-    await interaction.reply(`Checking badges, please wait.`);
+    try {
+      //init response
+      const msg = await interaction.reply({
+        content: `Checking badges, please wait.`,
+        flags: MessageFlags.Ephemeral,
+        withResponse: true,
+      });
 
-    //main important variables...
-    const guild = interaction.guild;
-    const guildid = interaction.guildId;
+      //main important variables...
+      const guild = interaction.guild;
+      const guildid = interaction.guildId;
 
-    const role = interaction.options.getRole("role");
-    const badge = interaction.options.getString("badgeid");
-    const key = interaction.options.getString("apikey");
-    const user = interaction.options.getUser("user");
-    const member = await guild.members.fetch(user.id);
-    const invoker = await guild.members.fetch(interaction.user.id);
-    const manageRoles = invoker.permissions.has(
-      PermissionsBitField.Flags.ManageRoles,
-    );
+      const role = interaction.options.getRole("role");
+      const badge = interaction.options.getString("badgeid");
+      const key = interaction.options.getString("apikey");
+      const user = interaction.options.getUser("user");
+      const member = await guild.members.fetch(user.id);
+      const invoker = await guild.members.fetch(interaction.user.id);
+      const manageRoles = invoker.permissions.has(
+        PermissionsBitField.Flags.ManageRoles,
+      );
 
-    if (!manageRoles) {
-      await interaction.followUp("Missing required manage-role permissions.");
-      return;
-    }
+      //checks for perms
+      if (!manageRoles) {
+        await interaction.editReply(
+          "Missing required manage-role permissions.",
+        );
+        return;
+      }
 
-    //checks for badge
-    if (await checkUser(member.id, badge, guildid, key)) {
-      await interaction.followUp(member.user.tag + " has the badge!");
-      await member.roles.add(role);
-    } else {
-      await interaction.followUp(member.user.tag + " does NOT have the badge");
+      //checks for badge
+      if (await checkUser(member.id, badge, guildid, key)) {
+        await interaction.editReply(
+          member.user.tag + " has the badge! Adding role.",
+        );
+        await member.roles.add(role);
+      } else {
+        await interaction.editReply(
+          member.user.tag + " does NOT have the badge. No role added.",
+        );
+      }
+    } catch (error) {
+      await interaction.editReply(`${error.message || error}`);
     }
   },
 };

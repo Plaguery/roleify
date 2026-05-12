@@ -16,12 +16,21 @@ async function fetchId(id, key, guildid) {
       },
     );
     const data = await response.json();
+
+    //error checking
     if (!response.ok) {
+      var err;
       if (response.status == 429) {
-        throw new Error(`Error: Bloxlink rate limit`);
+        err = new Error(`Error: Bloxlink rate limit`);
+      } else if (response.status == 404) {
+        err = new Error(`Error: Bloxlink can't find the specified user.`);
+      } else if (response.status == 401) {
+        err = new Error(`Error: Must provide correct Bloxlink API key`);
       } else {
-        throw new Error(`Bloxlink Error: ${response.status} // ${data.error}`);
+        err = new Error(`Bloxlink Error: ${response.status} // ${data.error}`);
       }
+      err.status = response.status;
+      throw err;
     }
 
     const bloxId = data.robloxID;
