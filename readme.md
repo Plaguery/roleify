@@ -10,13 +10,13 @@ The bot integrates with Bloxlink (to get the Roblox user from the Discord accoun
 
 # Commands
 
-/role
+**/role**
 This is the main command. It takes the following inputs:  
-user: This is the Discord user to check.  
-role: This is the role to give the user if they own the badge  
-badgeid: This is the id of the Roblox badge to check for. The bot uses Bloxlink to gather the user's Roblox id from their Discord account, and then the Roblox API from there to check for badge ownership.  
-apikey: This is the BloxLink API key for the server a command was ran in. It is required since BloxLink API keys are server specific. The default API key will NOT work unless you are in the server this bot was developed for. You can generate a key here: https://blox.link/dashboard/user/developer  
-checktype: This refers to the type of Roblox item to look for. It defaults to badge if left blank, but you can select assets, gamepasses, and bundles as well.
+_user_: This is the Discord user to check.  
+_role_: This is the role to give the user if they own the badge  
+_badgeid_: This is the id of the Roblox badge to check for. The bot uses Bloxlink to gather the user's Roblox id from their Discord account, and then the Roblox API from there to check for badge ownership.  
+_apikey_: This is the BloxLink API key for the server a command was ran in. It is required since BloxLink API keys are server specific. The default API key will NOT work unless you are in the server this bot was developed for. You can generate a key here: https://blox.link/dashboard/user/developer  
+_checktype_: This refers to the type of Roblox item to look for. It defaults to badge if left blank, but you can select assets, gamepasses, and bundles as well.
 
-/roleall  
+**/roleall**  
 This command is similar to role, except it automatically checks ALL users within the server. It attaches a txt file with the results of the command once it finishes running.
