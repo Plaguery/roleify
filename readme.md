@@ -2,8 +2,10 @@
 
 This is a Discord bot which gives users roles based on whether or not they own a Roblox badge.  
 Add it to your server here: https://discord.com/oauth2/authorize?client_id=1489809504685133977&permissions=1101927548928&integration_type=0&scope=bot  
-NOTE: TO ENSURE THE BOT IS ABLE TO CONFIGURE ROLES, DRAG THE AUTOMATICALLY GENERATED ROLE ABOVE THE ROLES YOU WANT IT TO BE ABLE TO ASSIGN.
+NOTE: TO ENSURE THE BOT IS ABLE TO CONFIGURE ROLES, DRAG THE AUTOMATICALLY GENERATED ROLE ABOVE THE ROLES YOU WANT IT TO BE ABLE TO ASSIGN.  
 
+# Demo
+Demo video: https://youtu.be/HM2x9ZBDW78
 # Development
 
 The bot integrates with Bloxlink (to get the Roblox user from the Discord account) and the Roblox API (to check if the user has the specified badge)
