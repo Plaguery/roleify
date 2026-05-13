@@ -1,2 +1,4 @@
 .env
 config.json
+id_rsa.pub
+id_rsa
