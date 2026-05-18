@@ -8,7 +8,7 @@ NOTE: TO ENSURE THE BOT IS ABLE TO CONFIGURE ROLES, DRAG THE AUTOMATICALLY GENER
 Demo video: https://youtu.be/HM2x9ZBDW78
 # Development
 
-The bot integrates with Bloxlink (to get the Roblox user from the Discord account) and the Roblox API (to check if the user has the specified badge)
+The bot integrates with Bloxlink (to get the Roblox user from the Discord account) and the Roblox API (to check if the user has the specified badge). It is hosted using Nest.
 
 # Commands
 
