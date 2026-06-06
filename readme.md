@@ -36,9 +36,12 @@ This command is similar to role, except it automatically checks ALL users within
 4. Afterwards, when using the commands, ensure the following conditions are met:  
    The "apikey" parameter must have your Bloxlink API key from earlier pasted in  
    ![Image of parameters](image-1.png)  
+   <br>
    The role given to Roleify to assign MUST be lower in the role hierarchy than the automatically generated Roleify role  
    ![Image of role hierarchy](image-2.png)  
+   <br>
    The users you are checking must be verified on Bloxlink in order to get their Roblox account from their Discord. Bloxlink verification can be done by following this tutorial: https://www.youtube.com/watch?v=ToltKa0eLd0  
+   <br>
    The user should have their Roblox inventory made public, or else the badges can not be accessed by the Roblox API.
 
 # Roblox Badgeid
