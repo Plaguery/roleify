@@ -2,10 +2,12 @@
 
 This is a Discord bot which gives users roles based on whether or not they own a Roblox badge.  
 Add it to your server here: https://discord.com/oauth2/authorize?client_id=1489809504685133977&permissions=1101927548928&integration_type=0&scope=bot  
-NOTE: TO ENSURE THE BOT IS ABLE TO CONFIGURE ROLES, DRAG THE AUTOMATICALLY GENERATED ROLE ABOVE THE ROLES YOU WANT IT TO BE ABLE TO ASSIGN.  
+NOTE: TO ENSURE THE BOT IS ABLE TO CONFIGURE ROLES, DRAG THE AUTOMATICALLY GENERATED ROLE ABOVE THE ROLES YOU WANT IT TO BE ABLE TO ASSIGN.
 
 # Demo
+
 Demo video: https://youtu.be/HM2x9ZBDW78
+
 # Development
 
 The bot integrates with Bloxlink (to get the Roblox user from the Discord account) and the Roblox API (to check if the user has the specified badge). It is hosted using Nest.
@@ -31,12 +33,12 @@ This command is similar to role, except it automatically checks ALL users within
    ![Click the + button](image.png)
 3. Create a Bloxlink API key here: https://blox.link/dashboard/user/developer
    Make sure to select the server you want to use Roleify in.
-4. Afterwards, when using the commands, ensure the following conditions are met:
-   The "apikey" parameter must have your Bloxlink API key from earlier pasted in
-   ![Image of parameters](image-1.png)
-   The role given to Roleify to assign MUST be lower in the role hierarchy than the automatically generated Roleify role
-   ![Image of role hierarchy](image-2.png)
-   The users you are checking must be verified on Bloxlink in order to get their Roblox account from their Discord. Bloxlink verification can be done by following this tutorial: https://www.youtube.com/watch?v=ToltKa0eLd0
+4. Afterwards, when using the commands, ensure the following conditions are met:  
+   The "apikey" parameter must have your Bloxlink API key from earlier pasted in  
+   ![Image of parameters](image-1.png)  
+   The role given to Roleify to assign MUST be lower in the role hierarchy than the automatically generated Roleify role  
+   ![Image of role hierarchy](image-2.png)  
+   The users you are checking must be verified on Bloxlink in order to get their Roblox account from their Discord. Bloxlink verification can be done by following this tutorial: https://www.youtube.com/watch?v=ToltKa0eLd0  
    The user should have their Roblox inventory made public, or else the badges can not be accessed by the Roblox API.
 
 # Roblox Badgeid
